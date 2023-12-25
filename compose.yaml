@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  db:
+    env_file:
+      - .env
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+  server:
+    container_name: go_server
+    image: cosmtrek/air:latest
+    working_dir: /app
+    command: air -c ./.air.toml
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+
+volumes:
+  postgres-db:
